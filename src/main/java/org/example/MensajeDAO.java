@@ -94,5 +94,29 @@ public class MensajeDAO {
     }
 
     public static void editarMensajeDB(Mensaje mensaje){
+        Conexion mensajesDB = new Conexion();
+
+        try (Connection conexionDB = mensajesDB.get_connection()) {
+
+            try {
+                String updateQuery = "UPDATE mensajes SET mensaje = ?, autor_mensaje = ? WHERE id_mensaje = ?";
+                PreparedStatement ps = conexionDB.prepareStatement(updateQuery);
+                ps.setString(1, mensaje.getMensaje());
+                ps.setString(2, mensaje.getAutorMensaje());
+                ps.setInt(3, mensaje.getIdMensaje());
+                int columnasAfectadas = ps.executeUpdate();
+                if (columnasAfectadas != 0) {
+                    System.out.printf("Se han actualizado %d mensaje(s) con exito!\n\n", columnasAfectadas);
+                } else {
+                    System.out.printf("No se encuentran registros con id_mensaje = %d\n\n", mensaje.getIdMensaje());
+                }
+            } catch (SQLException e){
+                System.out.println("No fue posible realizar la transaccion");
+                System.out.println(e);
+            }
+
+        } catch (SQLException e){
+            System.out.println(e);
+        }
     }
 }

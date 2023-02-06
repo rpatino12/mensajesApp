@@ -26,6 +26,7 @@ public class MensajeService {
 
     public static void leerMensajes(){
         ArrayList<Mensaje> listaMensajes = MensajeDAO.leerMensajesDB();
+        System.out.printf("Se encontraron %d registro(s): \n\n", listaMensajes.size());
         for (Mensaje m:listaMensajes) {
             System.out.println("ID: "+m.getIdMensaje());
             System.out.println("Mensaje: "+m.getMensaje());
@@ -43,6 +44,22 @@ public class MensajeService {
     }
 
     public static void editarMensaje(){
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Escribe el mensaje nuevo: ");
+        String texto = sc.nextLine();
+
+        System.out.println("Autor del mensaje nuevo: ");
+        String autor = sc.nextLine();
+
+        System.out.println("Id del mensaje que vas a editar: ");
+        int idMensaje = sc.nextInt();
+
+        Mensaje actualizacion = new Mensaje();
+        actualizacion.setMensaje(texto);
+        actualizacion.setAutorMensaje(autor);
+        actualizacion.setIdMensaje(idMensaje);
+
+        MensajeDAO.editarMensajeDB(actualizacion);
     }
 
 }
