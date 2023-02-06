@@ -48,6 +48,8 @@ public class MensajeDAO {
 
             String readQuery = "SELECT * FROM mensajes";
             PreparedStatement ps = conexionDB.prepareStatement(readQuery);
+            // Se utiliza este metodo en vez del executeUpdate,
+            // porque en este caso no se realiza una transaccion sobre la base de datos es solo un query de consulta
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -67,6 +69,28 @@ public class MensajeDAO {
     }
 
     public static void borrarMensajeDB(int idMensaje){
+        Conexion mensajesDB = new Conexion();
+
+        try (Connection conexionDB = mensajesDB.get_connection()) {
+
+            try {
+                String deleteQuery = "DELETE FROM mensajes WHERE id_mensaje = ?";
+                PreparedStatement ps = conexionDB.prepareStatement(deleteQuery);
+                ps.setInt(1, idMensaje);
+                int columnasAfectadas = ps.executeUpdate();
+                if (columnasAfectadas != 0) {
+                    System.out.printf("Se han eliminado %d registro(s) con exito!\n\n", columnasAfectadas);
+                } else {
+                    System.out.printf("No se encuentran registros con id_mensaje = %d\n\n", idMensaje);
+                }
+            } catch (SQLException e){
+                System.out.println("No fue posible realizar la transaccion");
+                System.out.println(e);
+            }
+
+        } catch (SQLException e){
+            System.out.println(e);
+        }
     }
 
     public static void editarMensajeDB(Mensaje mensaje){
