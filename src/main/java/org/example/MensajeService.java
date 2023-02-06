@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class MensajeService {
@@ -24,6 +25,14 @@ public class MensajeService {
     }
 
     public static void leerMensajes(){
+        ArrayList<Mensaje> listaMensajes = MensajeDAO.leerMensajesDB();
+        for (Mensaje m:listaMensajes) {
+            System.out.println("ID: "+m.getIdMensaje());
+            System.out.println("Mensaje: "+m.getMensaje());
+            System.out.println("Autor: "+m.getAutorMensaje());
+            System.out.println("Fecha: "+m.getFechaMensaje());
+            System.out.println("");
+        }
     }
 
     public static void borrarMensaje(){

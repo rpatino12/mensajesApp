@@ -2,7 +2,9 @@ package org.example;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class MensajeDAO {
     // DAO (Data access object) son los metodos que permiten la conexion con la base de datos
@@ -38,7 +40,30 @@ public class MensajeDAO {
         }
     }
 
-    public static void leerMensajesDB(){
+    public static ArrayList<Mensaje> leerMensajesDB(){
+        Conexion mensajesDB = new Conexion();
+        ArrayList<Mensaje> list = new ArrayList<>();
+
+        try (Connection conexionDB = mensajesDB.get_connection()) {
+
+            String readQuery = "SELECT * FROM mensajes";
+            PreparedStatement ps = conexionDB.prepareStatement(readQuery);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                Mensaje listElement = new Mensaje();
+                listElement.setIdMensaje(rs.getInt("id_mensaje"));
+                listElement.setMensaje(rs.getString("mensaje"));
+                listElement.setAutorMensaje(rs.getString("autor_mensaje"));
+                listElement.setFechaMensaje(rs.getString("fecha_mensaje"));
+                list.add(listElement);
+            }
+            rs.close();
+        } catch (SQLException e){
+            System.out.println("No fue posible recuperar los mensajes");
+            System.out.println(e);
+        }
+        return list;
     }
 
     public static void borrarMensajeDB(int idMensaje){
